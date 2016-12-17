@@ -1,5 +1,5 @@
 # ftp_python
-Tugas FP ProgJar
+Tugas FP ProgJar FTP
 
 
 [Membuat FTP Server dan Klien]
