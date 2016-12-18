@@ -33,6 +33,7 @@ try:
                 if (data == 'QUIT'):
                     sock.send('221 Goodbye.\r\n')
                     sock.close()
+                    input_socket.remove(sock)
                 elif (data == 'HELP'):
                     sock.send('214 The following commands are recognized:\r\nCWD\r\nQUIT\r\nRETR\r\nSTOR\r\nRNTO\r\nDELE\r\nRMD\r\nMKD\r\nPWD\r\nLIST\r\nHELP\r\n')
 
