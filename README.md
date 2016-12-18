@@ -2,10 +2,10 @@
 Tugas FP - ProgJar FTP
 
 [Anggota Kelompok]
-> 5114100005 - DEWANGGA OKTA W.
-> 5114100037 - ALFITRAH N. S.
-> 5114100180 - RIZAL S.
-> 5114100191 - SADDHANA ARTA D.
+- 5114100005 - DEWANGGA OKTA W.
+- 5114100037 - ALFITRAH N. S.
+- 5114100180 - RIZAL S.
+- 5114100191 - SADDHANA ARTA D.
 
 [Membuat FTP Server dan Klien]
 Ketentuannya adalah mengimplementasikan RFC 959 (dituliskan dengan subbab) sebagai berikut
