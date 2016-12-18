@@ -1,10 +1,15 @@
 # ftp_python
-Tugas FP ProgJar FTP
+Tugas FP - ProgJar FTP
 
+[Anggota Kelompok]
+> 5114100005 - DEWANGGA OKTA W.
+> 5114100037 - ALFITRAH N. S.
+> 5114100180 - RIZAL S.
+> 5114100191 - SADDHANA ARTA D.
 
 [Membuat FTP Server dan Klien]
 Ketentuannya adalah mengimplementasikan RFC 959 (dituliskan dengan subbab) sebagai berikut
-- Mempuat aplikasi FTP klien dan server
+> Membuat aplikasi FTP klien dan server
 - Autentikasi (USER dan PASS: 4.1.1)
 - Mengubah direktori aktif (CWD: 4.1.1)
 - Keluar aplikasi (QUIT: 4.1.1)
@@ -16,6 +21,6 @@ Ketentuannya adalah mengimplementasikan RFC 959 (dituliskan dengan subbab) sebag
 - Membuat direktori (MKD: 4.1.3)
 - Mencetak direktori aktif (PWD: 4.1.3)
 - Mendaftar file dan direktori (LIST: 4.1.3)
-- HELP: 4.1.3
+- HELP: (4.1.3)
 - Reply codes (200, 500, 202, 230, 530: 4.2.1)
 - Menerapkan teknik multiclient dengan modul select DAN thread
