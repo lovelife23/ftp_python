@@ -9,7 +9,7 @@ Tugas FP - ProgJar FTP
 
 [Membuat FTP Server dan Klien]
 Ketentuannya adalah mengimplementasikan RFC 959 (dituliskan dengan subbab) sebagai berikut
-> Membuat aplikasi FTP klien dan server
+- Membuat aplikasi FTP klien dan server
 - Autentikasi (USER dan PASS: 4.1.1)
 - Mengubah direktori aktif (CWD: 4.1.1)
 - Keluar aplikasi (QUIT: 4.1.1)
