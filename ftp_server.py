@@ -42,13 +42,35 @@ try:
                     loc = os.getcwd()
                     #tes = os.chdir(os.path.dirname(os.getcwd()))
                     sock.send(loc + '\n')
+                elif data == 'CWD':
+                    sock.send('Gatau Ngirim Apa\r\n')
+                    dirname = sock.recv(1024)
+                    loc = os.getcwd()
+                    isi = os.listdir(loc)
+                    response_data = ""
+                    flag=0
+                    if isi:
+                        for file in isi:
+                            if file == dirname:
+                                os.chdir(loc + "/" + dirname)
+                                loc = os.getcwd()
+                                # tes = os.chdir(os.path.dirname(os.getcwd()))
+                                sock.send(loc + '\n')
+                                flag=1
+                        if flag == 0:
+                            sock.send("no such name in directory\n")
+                    else:
+                        sock.send("no files in directory\n")
                 elif data == 'LIST':
                     path = os.getcwd()
                     response_data = ""
                     isi = os.listdir(path)
-                    for file in isi:
-                        response_data = response_data + file + "\n"
-                    sock.send(response_data)
+                    if isi:
+                        for file in isi:
+                            response_data = response_data + file + "\n"
+                        sock.send(response_data)
+                    else:
+                        sock.send("no files in directory\n")
                 elif data == 'HELP':
                     sock.send('214 The following commands are recognized:\r\nCWD\r\nQUIT\r\nRETR\r\nSTOR\r\nRNTO\r\nDELE\r\nRMD\r\nMKD\r\nPWD\r\nLIST\r\nHELP\r\n')
                 elif data == 'STOR':
