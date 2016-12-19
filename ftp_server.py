@@ -44,8 +44,8 @@ try:
                     sock.send(tes)
                 elif data == 'HELP':
                     sock.send('214 The following commands are recognized:\r\nCWD\r\nQUIT\r\nRETR\r\nSTOR\r\nRNTO\r\nDELE\r\nRMD\r\nMKD\r\nPWD\r\nLIST\r\nHELP\r\n')
-                elif (data == 'STOR'):
-                    sock.send('150 Opening data connection.\r\n226 Transfer complete.\r\n')
+                elif data == 'STOR':
+                    sock.send('150 Opening data connection.\r\n')
                     data = sock.recv(1024)
                     size = sock.recv(1024)
                     size = int(size)
@@ -59,6 +59,7 @@ try:
                                 break
                         f.write(isi)
                     print "DONE Upload"
+                    sock.send("226 Transfer complete.\r\n")
 
 except KeyboardInterrupt:
     server_socket.close()

@@ -50,6 +50,8 @@ try:
                         if len(data) >= b:
                             break
                     client_socket.send(data)
+                pesan = client_socket.recv(1024)
+                sys.stdout.write(pesan)
 
 except KeyboardInterrupt:
         client_socket.close()
