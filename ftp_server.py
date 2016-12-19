@@ -14,8 +14,7 @@ server_socket.listen(5)
 
 input_socket = [server_socket]
 print 'FTP Server - Progjar C 2016\r\n'
-print 'Press enter to end...'
-
+UN = 'Not Logged In'
 i = 0
 try:
     while True:
@@ -25,25 +24,25 @@ try:
             if sock == server_socket:
                 client_socket, client_address = server_socket.accept()
                 input_socket.append(client_socket)
-                print client_address, '> Connected, sending welcome message...'
+                print UN, client_address, '> Connected, sending welcome message...'
                 i = 0
             else:
                 if i == 0:
-                    print client_address, '> 220-FTP Server Progjar C 2016'
+                    print UN, client_address, '> 220-FTP Server Progjar C 2016'
                     sock.send('220 Welcome!\r\n')
                     i += 1
                 data = sock.recv(1024)
                 data = data[:4].strip().upper()
                 if not data == '.':
-                    print client_address, '>', data
+                    print UN, client_address, '>', data
                 if data == 'QUIT':
-                    print client_address, '> disconnected'
+                    print UN, client_address, '> disconnected'
                     sock.send('221 Goodbye.\r\n')
                     sock.close()
                     input_socket.remove(sock)
 
                 elif data == 'PWD':
-                    print client_address, '> PWD'
+                    print UN, client_address, '> PWD'
                     loc = os.getcwd()
                     # tes = os.chdir(os.path.dirname(os.getcwd()))
                     sock.send(loc + '\n')
@@ -81,11 +80,14 @@ try:
                         sock.send(response_data)
                     else:
                         sock.send("no files in directory\n")
+
                 elif data == 'HELP':
+                    print UN, client_address, '> 214 Have a nice day.'
                     sock.send(
                         '214 The following commands are recognized:\r\nCWD\t\tQUIT\tRETR\r\nSTOR\tRNTO\tDELE\r\nRMD'
                         '\t\tMKD\t\tPWD\r\nLIST\tHELP\r\n')
                 elif data == 'STOR':
+                    print UN, client_address, '> 150 Opening data connection.'
                     sock.send('150 Opening data connection.\r\n')
                     data = sock.recv(1024)
                     size = sock.recv(1024)
@@ -95,31 +97,31 @@ try:
                         while 1:
                             dapet = sock.recv(1024)
                             isi += dapet
-                            time.sleep(0.1)
+                            # time.sleep(0.1)
                             if len(isi) >= size:
                                 break
                         f.write(isi)
                     time.sleep(1)
-                    print "DONE Upload"
+                    print UN, client_address, '> 226 Transfer complete.'
                     sock.send("226 Transfer complete.\r\n")
                 elif data == 'RETR':
+                    print UN, client_address, '> 150 Opening data connection.'
                     sock.send('150 Opening data connection.\r\n')
                     filename = sock.recv(1024)
-                    b = os.path.getsize(filename)
-                    b = str(b)
-                    sock.send(b)
-                    b = int(b)
+                    filesize = os.path.getsize(filename)
+                    filesize = str(filesize)
+                    sock.send(filesize)
+                    filesize = int(filesize)
                     with open(filename, 'rb') as f:
                         data = ""
                         while 1:
                             baca = f.read(1024)
                             data += baca
-                            time.sleep(0.1)
-                            if len(data) >= b:
+                            if len(data) >= filesize:
                                 break
                         sock.send(data)
                     time.sleep(1)
-                    print "DONE Download"
+                    print UN, client_address, '> Download Finished.'
                     sock.send("226 Transfer complete.\r\n")
                 elif data == 'DELE':
                     sock.send('Deleting Files....\r\n')
@@ -127,10 +129,12 @@ try:
                     allow_delete = True
                     if allow_delete:
                         os.remove(filename)
-                        sock.send('250 File deleted.\r\n')
+                        print UN, client_address, '> 250 File deleted successfully.'
+                        sock.send('250 File deleted successfully\r\n')
                         allow_delete = False
                     else:
-                        self.send('450 Not allowed.\r\n')
+                        print UN, client_address, '> 450 Not Allowed.'
+                        self.send('450 Not Allowed.\r\n')
 
 except KeyboardInterrupt:
     server_socket.close()
