@@ -76,4 +76,4 @@ try:
 
 except KeyboardInterrupt:
         client_socket.close()
-        sys.exit(0)
+sys.exit(0)
