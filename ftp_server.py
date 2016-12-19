@@ -25,22 +25,22 @@ try:
                 i=0
 
             else:
-                if (i==0):
+                if i==0:
                     sock.send('220 Welcome!\r\n')
                     i+=1
                 data = sock.recv(1024)
                 data = data[:4].strip().upper()
                 print data
                 #sock.send('214 The following commands are recognized:\r\nCWD\r\nQUIT\r\nRETR\r\nSTOR\r\nRNTO\r\nDELE\r\nRMD\r\nMKD\r\nPWD\r\nLIST\r\nHELP\r\n')
-                if (data == 'QUIT'):
+                if data == 'QUIT':
                     sock.send('221 Goodbye.\r\n')
                     sock.close()
                     input_socket.remove(sock)
-                elif (data == 'TEST'):
+                elif data == 'TEST':
                     tes = os.getcwd()
                     #tes = os.chdir(os.path.dirname(os.getcwd()))
                     sock.send(tes)
-                elif (data == 'HELP'):
+                elif data == 'HELP':
                     sock.send('214 The following commands are recognized:\r\nCWD\r\nQUIT\r\nRETR\r\nSTOR\r\nRNTO\r\nDELE\r\nRMD\r\nMKD\r\nPWD\r\nLIST\r\nHELP\r\n')
 
 except KeyboardInterrupt:
