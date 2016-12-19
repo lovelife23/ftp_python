@@ -43,7 +43,7 @@ try:
                     command, filename = msg.split(' ', 1)
                     filename = filename.rstrip('\n')
                     client_socket.send(filename)
-                    print "Uploading " + filename
+                    print 'Uploading ' + filename
                     b = os.path.getsize(filename)
                     b = str(b)
                     client_socket.send(b)
@@ -64,7 +64,7 @@ try:
                     command, filename = msg.split(' ', 1)
                     filename = filename.rstrip('\n')
                     client_socket.send(filename)
-                    print "Downloading " + filename
+                    print 'Downloading ' + filename
                     size = client_socket.recv(1024)
                     size = int(size)
                     with open(filename, 'wb') as f:
@@ -87,6 +87,7 @@ try:
                     pesan = client_socket.recv(1024)
                     sys.stdout.write(pesan)
             else:
+                pesan = client_socket.recv(1024)
                 print "Wrong Command, Try HELP to view all available commands"
 
 except KeyboardInterrupt:
