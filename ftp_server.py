@@ -38,10 +38,10 @@ try:
                     sock.send('221 Goodbye.\r\n')
                     sock.close()
                     input_socket.remove(sock)
-                elif data == 'TEST':
-                    tes = os.getcwd()
+                elif data == 'PWD':
+                    loc = os.getcwd()
                     #tes = os.chdir(os.path.dirname(os.getcwd()))
-                    sock.send(tes)
+                    sock.send(loc + '\n')
                 elif data == 'HELP':
                     sock.send('214 The following commands are recognized:\r\nCWD\r\nQUIT\r\nRETR\r\nSTOR\r\nRNTO\r\nDELE\r\nRMD\r\nMKD\r\nPWD\r\nLIST\r\nHELP\r\n')
                 elif data == 'STOR':
@@ -83,4 +83,4 @@ try:
 
 except KeyboardInterrupt:
     server_socket.close()
-    sys.exit(0)
+sys.exit(0)
