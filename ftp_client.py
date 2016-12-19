@@ -5,7 +5,7 @@ import os
 
 try:
     while True:
-        # server_address = ('192.168.43.139', 5000)
+        #server_address = ('192.168.1.47', 5000)
         server_address = ('localhost', 5000)
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -23,7 +23,7 @@ try:
             msg = raw_input("> Command\t:\t")
             if 'CWD' in msg or 'QUIT' in msg or 'RETR' in msg or 'STOR' in msg or 'RNTO' in msg or 'DELE' in msg \
                     or 'RMD' in msg or 'MKD' in msg or 'PWD' in msg or 'LIST' in msg or 'HELP' in msg or "USER" in msg \
-                    or "PASS" in msg or "RNFR"in msg or "RNTO" in msg:
+                    or "PASS" in msg or "RNFR"in msg or "RNTO" in msg or "MKD" in msg or "RMD" in msg:
                 client_socket.send(msg)
                 pesan = client_socket.recv(1024)
                 sys.stdout.write('# Response\t:\t' + pesan)

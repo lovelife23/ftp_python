@@ -126,7 +126,7 @@ try:
                             prevname = login.split(" ")[1]
                             loc = os.getcwd()
                             loc = loc + "\\" + prevname
-                            print loc
+                            #print loc
                             if os.path.exists(loc):
                                 if os.path.isfile(loc):
                                     prevname = prevname
@@ -149,6 +149,28 @@ try:
                                 sock.send("250 File renamed.\r\n")
                             else:
                                 sock.send("do a valid RNFR command first\r\n")
+
+                        elif data=='MKD':
+                            dir=login.split(" ")[1]
+                            loc=os.getcwd()
+                            loc = loc + "\\" + dir
+                            if not os.path.isdir(loc):
+                                os.mkdir(loc)
+                                sock.send("directory created\r\n")
+                            else:
+                                sock.send("directory name is already been used\r\n")
+
+                        elif data=='RMD':
+                            dir = login.split(" ")[1]
+                            loc = os.getcwd()
+                            loc = loc + "\\" + dir
+                            if os.path.isdir(loc):
+                                os.rmdir(loc)
+                                sock.send ("directory deleted\r\n")
+                            else:
+                                sock.send("directory is not exist\r\n")
+
+
                         elif data == 'HELP':
                             print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> 214 Have a nice day.'
                             sock.send(
@@ -166,7 +188,7 @@ try:
                                 while 1:
                                     dapet = sock.recv(1024)
                                     isi += dapet
-                                    # time.sleep(0.1)
+                                    #time.sleep(0.1)
                                     if len(isi) >= size:
                                         break
                                 f.write(isi)
@@ -190,9 +212,14 @@ try:
                                     if len(data) >= filesize:
                                         break
                                 sock.send(data)
+                                sock.send("226 Transfer complete.\r\n")
                             #time.sleep(1)
-                            sock.send("226 Transfer complete.\r\n")
                             print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> Download Finished.'
+
+
+
+
+
                         elif data == 'DELE':
                             sock.send('Deleting Files...\r\n')
                             filename = sock.recv(1024)
