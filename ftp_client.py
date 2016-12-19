@@ -8,29 +8,26 @@ try:
         # server_address = ('192.168.43.139', 5000)
         server_address = ('localhost', 5000)
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # client_socket.connect(server_address)
-        # sys.stdout.write('>> ')
 
         try:
             client_socket.connect(server_address)
 
         except socket.error:
-            print ' ! Gagal membuat soket : "Tidak bisa terhubung dengan server"'
+            print '! Error\t:\tGagal membuat soket : "Tidak bisa terhubung dengan server"'
             sys.exit()
 
         client_socket.send(".")
         pesan = client_socket.recv(1024)
-        sys.stdout.write(pesan)
+        sys.stdout.write('# Response\t:\t' + pesan)
         while True:
-            msg = raw_input(">> ")
+            msg = raw_input("> Command\t:\t")
             if 'CWD' in msg or 'QUIT' in msg or 'RETR' in msg or 'STOR' in msg or 'RNTO' in msg or 'DELE' in msg \
-                    or 'RMD' in msg or 'MKD' in msg or 'PWD' in msg or 'LIST' in msg or 'HELP' in msg or "USER" in msg or "PASS" in msg or "RNFR"in msg or "RNTO" in msg:
-                # client_socket.send(".")
+                    or 'RMD' in msg or 'MKD' in msg or 'PWD' in msg or 'LIST' in msg or 'HELP' in msg or "USER" in msg \
+                    or "PASS" in msg or "RNFR"in msg or "RNTO" in msg:
                 client_socket.send(msg)
                 pesan = client_socket.recv(1024)
-                sys.stdout.write(pesan)
+                sys.stdout.write('# Response\t:\t' + pesan)
                 if '221' in pesan:
-                    # sys.stdout.write(pesan)
                     client_socket.close()
                     sys.exit(0)
                     break
@@ -39,12 +36,12 @@ try:
                     filename = filename.rstrip('\n')
                     client_socket.send(filename)
                     pesan = client_socket.recv(1024)
-                    sys.stdout.write(pesan)
+                    sys.stdout.write('# Response\t:\t' + pesan)
                 if 'STOR' in msg:
                     command, filename = msg.split(' ', 1)
                     filename = filename.rstrip('\n')
                     client_socket.send(filename)
-                    print 'Uploading ' + filename
+                    print '+ Status\t:\tUploading ' + filename
                     b = os.path.getsize(filename)
                     b = str(b)
                     client_socket.send(b)
@@ -54,18 +51,17 @@ try:
                         while 1:
                             baca = f.read(1024)
                             data += baca
-                            # time.sleep(0.1)
                             if len(data) >= b:
                                 break
                         client_socket.send(data)
-                    time.sleep(1)
+                    #time.sleep(1)
                     pesan = client_socket.recv(1024)
-                    sys.stdout.write(pesan)
+                    sys.stdout.write('# Response\t:\t' + pesan)
                 if 'RETR' in msg:
                     command, filename = msg.split(' ', 1)
                     filename = filename.rstrip('\n')
                     client_socket.send(filename)
-                    print 'Downloading ' + filename
+                    print '+ Status\t:\tDownloading ' + filename
                     size = client_socket.recv(1024)
                     size = int(size)
                     with open(filename, 'wb') as f:
@@ -73,28 +69,21 @@ try:
                         while 1:
                             dapet = client_socket.recv(1024)
                             isi += dapet
-                            # time.sleep(0.1)
                             if len(isi) >= size:
                                 break
                         f.write(isi)
                     time.sleep(1)
                     pesan = client_socket.recv(1024)
-                    # pesan = client_socket.recv(1024)
-                    sys.stdout.write(pesan)
-                #if 'RNFR' in msg:
-                    #command, filename = msg.split(' ', 1)
-                    #filename = filename.rstrip('\n')
-                    #client_socket.send(filename)
+                    sys.stdout.write('# Response\t:\t' + pesan)
 
                 if 'DELE' in msg:
                     command, filename = msg.split(' ', 1)
                     filename = filename.rstrip('\n')
                     client_socket.send(filename)
                     pesan = client_socket.recv(1024)
-                    sys.stdout.write(pesan)
+                    sys.stdout.write('# Response\t:\t' + pesan)
             else:
-                # pesan = client_socket.recv(1024)
-                print 'Wrong Command, Try HELP to view all available commands'
+                print '! Error\t\t:\tWrong Command, Try HELP to view all available commands'
 
 except KeyboardInterrupt:
     client_socket.close()
