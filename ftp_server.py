@@ -43,7 +43,7 @@ try:
                     #tes = os.chdir(os.path.dirname(os.getcwd()))
                     sock.send(loc + '\n')
                 elif data == 'CWD':
-                    sock.send('Gatau Ngirim Apa\r\n')
+                    sock.send('250 Working directory changed.a\r\n')
                     dirname = sock.recv(1024)
                     loc = os.getcwd()
                     isi = os.listdir(loc)
