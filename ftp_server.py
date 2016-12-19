@@ -114,6 +114,16 @@ try:
                     time.sleep(1)
                     print "DONE Download"
                     sock.send("226 Transfer complete.\r\n")
+                elif data == 'DELE':
+                    sock.send('Gatau Ngirim Apa\r\n')
+                    filename = sock.recv(1024)
+                    allow_delete = True
+                    if allow_delete:
+                        os.remove(filename)
+                        sock.send('250 File deleted.\r\n')
+                        allow_delete = False
+                    else:
+                        self.send('450 Not allowed.\r\n')
 
 except KeyboardInterrupt:
     server_socket.close()

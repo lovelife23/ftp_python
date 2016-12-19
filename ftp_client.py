@@ -80,6 +80,12 @@ try:
                     pesan = client_socket.recv(1024)
                     #pesan = client_socket.recv(1024)
                     sys.stdout.write(pesan)
+                if "DELE" in msg:
+                    command, filename = msg.split(' ', 1)
+                    filename = filename.rstrip('\n')
+                    client_socket.send(filename)
+                    pesan = client_socket.recv(1024)
+                    sys.stdout.write(pesan)
             else:
                 print "wrong command"
 
