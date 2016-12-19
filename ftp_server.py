@@ -47,9 +47,14 @@ try:
                     dirname = sock.recv(1024)
                     loc = os.getcwd()
                     isi = os.listdir(loc)
-                    response_data = ""
-                    flag=0
-                    if isi:
+                    if dirname == "..":
+                        os.chdir(dirname)
+                        loc = os.getcwd()
+                        # tes = os.chdir(os.path.dirname(os.getcwd()))
+                        sock.send(loc + '\n')
+                    elif isi:
+                        response_data = ""
+                        flag = 0
                         for file in isi:
                             if file == dirname:
                                 os.chdir(loc + "/" + dirname)
