@@ -52,7 +52,7 @@ try:
                             input_socket.remove(sock)
                         elif data == 'USER':
                             UN = login.split(" ")[1]
-                            sock.send("enter your password\r\n")
+                            sock.send("331 Password required:\r\n")
                         elif data == 'PASS':
                             PW = login.split(" ")[1]
                             if PW == pwd and UN == user:
@@ -69,7 +69,7 @@ try:
                                 '214 The following commands are recognized:\r\nUSER\tPASS\tCWD\r\nQUIT\tRETR\tSTOR'
                                 '\r\nRNTO\tDELE\tRMD\r\nMKD\t\tPWD\t\tLIST\r\nHELP\r\n')
                         else:
-                            sock.send("Please Login using USER and PASS command.\r\n")
+                            sock.send("530 Please Login using USER and PASS command.\r\n")
                     elif loginflag != 0:
                         print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '>', data
                         if data == 'QUIT':
@@ -81,7 +81,7 @@ try:
                             print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> PWD'
                             loc = os.getcwd()
                             # tes = os.chdir(os.path.dirname(os.getcwd()))
-                            sock.send(loc + '\n')
+                            sock.send('212 '+loc + '\n')
                         elif data == 'CWD':
                             dirname = login.split(" ")[1]
                             loc = os.getcwd()
@@ -110,7 +110,7 @@ try:
                                     os.chdir(dirname)
                                     sock.send('250 Working directory changed.\r\n')
                                 else:
-                                    sock.send("directory not found.\r\n")
+                                    sock.send("504 directory not found.\r\n")
 
                         elif data == 'LIST':
                             path = os.getcwd()
@@ -121,7 +121,7 @@ try:
                                     response_data = response_data + file + "\n"
                                 sock.send(response_data)
                             else:
-                                sock.send("no files in directory\n")
+                                sock.send("550 no files in directory\n")
                         elif data == 'RNFR':
                             prevname = login.split(" ")[1]
                             loc = os.getcwd()
@@ -135,11 +135,11 @@ try:
                                 else:
                                     prevname = ''
                                     renameflag = 0
-                                    sock.send("the requested item is not a valid file.\r\n")
+                                    sock.send("553 the requested item is not a valid file.\r\n")
                             else:
                                 prevname = ''
                                 renameflag = 0
-                                sock.send("File not found.\r\n")
+                                sock.send("550 File not found.\r\n")
                         elif data == 'RNTO':
                             newname = login.split(" ")[1]
                             if renameflag is not 0:
@@ -148,7 +148,7 @@ try:
                                 newname = ''
                                 sock.send("250 File renamed.\r\n")
                             else:
-                                sock.send("do a valid RNFR command first\r\n")
+                                sock.send("503 do a valid RNFR command first\r\n")
 
                         elif data=='MKD':
                             dir=login.split(" ")[1]
@@ -156,9 +156,9 @@ try:
                             loc = loc + "\\" + dir
                             if not os.path.isdir(loc):
                                 os.mkdir(loc)
-                                sock.send("directory created\r\n")
+                                sock.send('257' +dir+ "directory created\r\n")
                             else:
-                                sock.send("directory name is already been used\r\n")
+                                sock.send("553 directory name is already been used\r\n")
 
                         elif data=='RMD':
                             dir = login.split(" ")[1]
@@ -166,9 +166,9 @@ try:
                             loc = loc + "\\" + dir
                             if os.path.isdir(loc):
                                 os.rmdir(loc)
-                                sock.send ("directory deleted\r\n")
+                                sock.send ("200 directory deleted\r\n")
                             else:
-                                sock.send("directory is not exist\r\n")
+                                sock.send("550 directory is not exist\r\n")
 
 
                         elif data == 'HELP':
