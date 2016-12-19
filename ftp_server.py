@@ -3,6 +3,7 @@ import select
 import sys
 import time
 import os
+import os.path
 from datetime import datetime
 
 # server_address = ('127.0.0.1', 5000)
@@ -16,11 +17,12 @@ server_socket.listen(5)
 user="admin"
 pwd="admin"
 loginflag=0;
-
+renameflag=0;
 input_socket = [server_socket]
 print 'FTP Server - Progjar C 2016\r\n'
 UN = '(not logged in)'
 PW=''
+prevname=''
 i = 0
 try:
     while True:
@@ -101,6 +103,36 @@ try:
                         sock.send(response_data)
                     else:
                         sock.send("no files in directory\n")
+                elif data =='RNFR':
+                    prevname=login.split (" ")[1]
+                    loc=os.getcwd()
+                    loc=loc+"\\"+prevname
+                    print loc
+                    if os.path.exists(loc):
+                        if os.path.isfile(loc):
+                            prevname=prevname
+                            sock.send("350 Ready.\r\n")
+                            renameflag=1
+                        else:
+                            prevname = ''
+                            renameflag = 0
+                            sock.send("the requested item is not a valid file.\r\n")
+                    else:
+                        prevname=''
+                        renameflag=0
+                        sock.send("File not found.\r\n")
+
+                elif data=='RNTO':
+                    newname = login.split (" ")[1]
+                    if renameflag is not 0:
+                        os.rename(prevname,newname)
+                        prevname=''
+                        newname=''
+                        sock.send("250 File renamed.\r\n")
+                    else:
+                        sock.send("do a valid RNFR command first\r\n")
+
+
 
                 elif data == 'HELP':
                     print time.strftime('%Y/%m/%d %H:%M:%S'),UN, client_address, '> 214 Have a nice day.'

@@ -24,7 +24,7 @@ try:
         while True:
             msg = raw_input(">> ")
             if 'CWD' in msg or 'QUIT' in msg or 'RETR' in msg or 'STOR' in msg or 'RNTO' in msg or 'DELE' in msg \
-                    or 'RMD' in msg or 'MKD' in msg or 'PWD' in msg or 'LIST' in msg or 'HELP' in msg or "USER" in msg or "PASS" in msg:
+                    or 'RMD' in msg or 'MKD' in msg or 'PWD' in msg or 'LIST' in msg or 'HELP' in msg or "USER" in msg or "PASS" in msg or "RNFR"in msg or "RNTO" in msg:
                 # client_socket.send(".")
                 client_socket.send(msg)
                 pesan = client_socket.recv(1024)
@@ -81,6 +81,11 @@ try:
                     pesan = client_socket.recv(1024)
                     # pesan = client_socket.recv(1024)
                     sys.stdout.write(pesan)
+                #if 'RNFR' in msg:
+                    #command, filename = msg.split(' ', 1)
+                    #filename = filename.rstrip('\n')
+                    #client_socket.send(filename)
+
                 if 'DELE' in msg:
                     command, filename = msg.split(' ', 1)
                     filename = filename.rstrip('\n')
