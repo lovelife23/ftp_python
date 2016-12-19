@@ -42,6 +42,13 @@ try:
                     loc = os.getcwd()
                     #tes = os.chdir(os.path.dirname(os.getcwd()))
                     sock.send(loc + '\n')
+                elif data == 'LIST':
+                    path = os.getcwd()
+                    response_data = ""
+                    isi = os.listdir(path)
+                    for file in isi:
+                        response_data = response_data + file + "\n"
+                    sock.send(response_data)
                 elif data == 'HELP':
                     sock.send('214 The following commands are recognized:\r\nCWD\r\nQUIT\r\nRETR\r\nSTOR\r\nRNTO\r\nDELE\r\nRMD\r\nMKD\r\nPWD\r\nLIST\r\nHELP\r\n')
                 elif data == 'STOR':
