@@ -60,6 +60,25 @@ try:
                         f.write(isi)
                     print "DONE Upload"
                     sock.send("226 Transfer complete.\r\n")
+                elif data == 'RETR':
+                    sock.send('150 Opening data connection.\r\n')
+                    filename = sock.recv(1024)
+                    b = os.path.getsize(filename)
+                    b = str(b)
+                    sock.send(b)
+                    b = int(b)
+                    with open(filename, 'rb') as f:
+                        data = ""
+                        while 1:
+                            baca = f.read(1024)
+                            data += baca
+                            time.sleep(0.1)
+                            if len(data) >= b:
+                                break
+                        sock.send(data)
+                    time.sleep(0.1)
+                    print "DONE Download"
+                    sock.send("226 Transfer complete.\r\n")
 
 except KeyboardInterrupt:
     server_socket.close()
