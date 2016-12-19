@@ -43,7 +43,7 @@ try:
                     #tes = os.chdir(os.path.dirname(os.getcwd()))
                     sock.send(loc + '\n')
                 elif data == 'CWD':
-                    sock.send('250 Working directory changed.a\r\n')
+                    sock.send('250 Working directory changed.\r\n')
                     dirname = sock.recv(1024)
                     loc = os.getcwd()
                     isi = os.listdir(loc)
@@ -115,7 +115,7 @@ try:
                     print "DONE Download"
                     sock.send("226 Transfer complete.\r\n")
                 elif data == 'DELE':
-                    sock.send('Gatau Ngirim Apa\r\n')
+                    sock.send('Deleting Files....\r\n')
                     filename = sock.recv(1024)
                     allow_delete = True
                     if allow_delete:
