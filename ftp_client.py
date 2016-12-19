@@ -50,6 +50,7 @@ try:
                         if len(data) >= b:
                             break
                     client_socket.send(data)
+                time.sleep(1)
                 pesan = client_socket.recv(1024)
                 sys.stdout.write(pesan)
             if "RETR" in msg:
@@ -68,8 +69,9 @@ try:
                         if len(isi) >= size:
                             break
                     f.write(isi)
-                time.sleep(0.1)
+                time.sleep(1)
                 pesan = client_socket.recv(1024)
+                #pesan = client_socket.recv(1024)
                 sys.stdout.write(pesan)
 
 except KeyboardInterrupt:

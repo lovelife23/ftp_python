@@ -58,6 +58,7 @@ try:
                             if len(isi) >= size:
                                 break
                         f.write(isi)
+                    time.sleep(1)
                     print "DONE Upload"
                     sock.send("226 Transfer complete.\r\n")
                 elif data == 'RETR':
@@ -76,7 +77,7 @@ try:
                             if len(data) >= b:
                                 break
                         sock.send(data)
-                    time.sleep(0.1)
+                    time.sleep(1)
                     print "DONE Download"
                     sock.send("226 Transfer complete.\r\n")
 
