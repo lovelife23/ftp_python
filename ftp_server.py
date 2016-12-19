@@ -1,10 +1,12 @@
 import socket
 import select
 import sys
+import time
 import os
 
 # server_address = ('127.0.0.1', 5000)
-server_address = ('192.168.43.139', 5000)
+#server_address = ('192.168.43.139', 5000)
+server_address = ('localhost', 5000)
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server_socket.bind(server_address)
@@ -42,6 +44,21 @@ try:
                     sock.send(tes)
                 elif data == 'HELP':
                     sock.send('214 The following commands are recognized:\r\nCWD\r\nQUIT\r\nRETR\r\nSTOR\r\nRNTO\r\nDELE\r\nRMD\r\nMKD\r\nPWD\r\nLIST\r\nHELP\r\n')
+                elif (data == 'STOR'):
+                    sock.send('150 Opening data connection.\r\n226 Transfer complete.\r\n')
+                    data = sock.recv(1024)
+                    size = sock.recv(1024)
+                    size = int(size)
+                    with open(data, 'wb') as f:
+                        isi = ''
+                        while 1:
+                            dapet = sock.recv(1024)
+                            isi += dapet
+                            time.sleep(0.1)
+                            if len(isi) >= size:
+                                break
+                        f.write(isi)
+                    print "DONE Upload"
 
 except KeyboardInterrupt:
     server_socket.close()
