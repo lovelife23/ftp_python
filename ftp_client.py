@@ -87,7 +87,7 @@ try:
                     pesan = client_socket.recv(1024)
                     sys.stdout.write(pesan)
             else:
-                print "wrong command"
+                print "Wrong Command, Try HELP to view all available commands"
 
 except KeyboardInterrupt:
         client_socket.close()
