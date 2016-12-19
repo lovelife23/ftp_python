@@ -83,29 +83,35 @@ try:
                             # tes = os.chdir(os.path.dirname(os.getcwd()))
                             sock.send(loc + '\n')
                         elif data == 'CWD':
-                            sock.send('250 Working directory changed.\r\n')
-                            dirname = sock.recv(1024)
+                            dirname = login.split(" ")[1]
                             loc = os.getcwd()
                             isi = os.listdir(loc)
                             if dirname == "..":
                                 os.chdir(dirname)
                                 loc = os.getcwd()
+                                sock.send('250 Working directory changed.\r\n')
                                 # tes = os.chdir(os.path.dirname(os.getcwd()))
                                 sock.send(loc + '\n')
-                            elif isi:
-                                response_data = ""
-                                flag = 0
-                                for file in isi:
-                                    if file == dirname:
-                                        os.chdir(loc + "/" + dirname)
-                                        loc = os.getcwd()
-                                        # tes = os.chdir(os.path.dirname(os.getcwd()))
-                                        sock.send(loc + '\n')
-                                        flag = 1
-                                if flag == 0:
-                                    sock.send("no such name in directory\n")
+                                # elif isi:
+                                #   response_data = ""
+                                #   flag = 0
+                                #  for file in isi:
+                                #     if file == dirname:
+                                #       loc = os.getcwd()
+                                #       # tes = os.chdir(os.path.dirname(os.getcwd()))
+                                #      sock.send(loc + '\n')
+                                #     flag = 1
+                                # if flag == 0:
+                                #   sock.send("no such name in directory\n")
+                                # else:
+                                #   sock.send("no files in directory\n")
                             else:
-                                sock.send("no files in directory\n")
+                                if os.path.isdir(dirname):
+                                    os.chdir(dirname)
+                                    sock.send('250 Working directory changed.\r\n')
+                                else:
+                                    sock.send("directory not found.\r\n")
+
                         elif data == 'LIST':
                             path = os.getcwd()
                             response_data = ""

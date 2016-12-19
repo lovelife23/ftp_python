@@ -31,12 +31,6 @@ try:
                     client_socket.close()
                     sys.exit(0)
                     break
-                if 'CWD' in msg:
-                    command, filename = msg.split(' ', 1)
-                    filename = filename.rstrip('\n')
-                    client_socket.send(filename)
-                    pesan = client_socket.recv(1024)
-                    sys.stdout.write('# Response\t:\t' + pesan)
                 if 'STOR' in msg:
                     command, filename = msg.split(' ', 1)
                     filename = filename.rstrip('\n')
