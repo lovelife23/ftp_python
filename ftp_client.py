@@ -79,7 +79,7 @@ try:
                             f.write(isi)
                         #time.sleep(1)
                         if flag:
-                            print '# Response\t:\t226 Transfer complete.'
+                            print '# Response\t:\t226 Transfer complete.\r\n'
                         else:
                             pesan = client_socket.recv(1024)
                             sys.stdout.write('# Response\t:\t' + pesan)
