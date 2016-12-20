@@ -51,21 +51,36 @@ try:
                             sock.close()
                             input_socket.remove(sock)
                         elif data == 'USER':
-                            UN = login.split(" ")[1]
-                            sock.send("331 Password required:\r\n")
-                        elif data == 'PASS':
-                            PW = login.split(" ")[1]
-                            if PW == pwd and UN == user:
-                                sock.send("230 User logged in, proceed.\r\n")
-                                loginflag = 1;
+                            check=login.split(" ")
+                            if len(check) is not 2:
+                            #print len(check)
+                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
                             else:
+                                UN = login.split(" ")[1]
+                                sock.send("331 Password required:\r\n")
+                        elif data == 'PASS':
+                            check=login.split(" ")
+                            if len(check) is not 2:
+                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
                                 UN = ''
-                                PW = ''
-                                sock.send("530 Login or password incorrect!\r\n");
-                                loginflag = 0;
+                                loginflag = 0
+                            else:
+                                PW = login.split(" ")[1]
+                                if PW == pwd and UN == user:
+                                    sock.send("230 User logged in, proceed.\r\n")
+                                    loginflag = 1
+                                else:
+                                    UN = ''
+                                    PW = ''
+                                    sock.send("530 Login or password incorrect!\r\n")
+                                    loginflag = 0
                         elif data == 'HELP':
-                            print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> 214 Have a nice day.'
-                            sock.send(
+                            check = login.split(' ')
+                            if len(check) is not 1:
+                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
+                            else:
+                                print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> 214 Have a nice day.'
+                                sock.send(
                                 '214 The following commands are recognized:\r\nUSER\tPASS\tCWD\r\nQUIT\tRETR\tSTOR'
                                 '\r\nRNTO\tDELE\tRMD\r\nMKD\t\tPWD\t\tLIST\r\nHELP\r\n')
                         else:
@@ -73,167 +88,202 @@ try:
                     elif loginflag != 0:
                         print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '>', data
                         if data == 'QUIT':
-                            print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> disconnected'
-                            sock.send('221 Goodbye.\r\n')
-                            sock.close()
-                            input_socket.remove(sock)
-                        elif data == 'PWD':
-                            print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> PWD'
-                            loc = os.getcwd()
-                            # tes = os.chdir(os.path.dirname(os.getcwd()))
-                            sock.send('212 '+loc + '\n')
-                        elif data == 'CWD':
-                            dirname = login.split(" ")[1]
-                            loc = os.getcwd()
-                            isi = os.listdir(loc)
-                            if dirname == "..":
-                                os.chdir(dirname)
-                                loc = os.getcwd()
-                                sock.send('250 Working directory changed.\r\n')
-                                # tes = os.chdir(os.path.dirname(os.getcwd()))
-                                sock.send(loc + '\n')
-                                # elif isi:
-                                #   response_data = ""
-                                #   flag = 0
-                                #  for file in isi:
-                                #     if file == dirname:
-                                #       loc = os.getcwd()
-                                #       # tes = os.chdir(os.path.dirname(os.getcwd()))
-                                #      sock.send(loc + '\n')
-                                #     flag = 1
-                                # if flag == 0:
-                                #   sock.send("no such name in directory\n")
-                                # else:
-                                #   sock.send("no files in directory\n")
+                            check = login.split(' ')
+                            if len(check) is not 1:
+                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
                             else:
-                                if os.path.isdir(dirname):
+                                print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> disconnected'
+                                sock.send('221 Goodbye.\r\n')
+                                sock.close()
+                                input_socket.remove(sock)
+                        elif data=="USER" or data=="PASS":
+                            sock.send("503 Bad sequence of commands.\r\n")
+                        elif data == 'PWD':
+                            check=login.split(' ')
+                            if len(check) is not 1:
+                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
+                            else:
+                                print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> PWD'
+                                loc = os.getcwd()
+                            # tes = os.chdir(os.path.dirname(os.getcwd()))
+                                sock.send('212 '+loc + '\n')
+                        elif data == 'CWD':
+                            check = login.split(' ')
+                            if len(check) is not 2:
+                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
+                            else:
+                                dirname = login.split(" ")[1]
+                                loc = os.getcwd()
+                                isi = os.listdir(loc)
+                                if dirname == "..":
                                     os.chdir(dirname)
+                                    loc = os.getcwd()
                                     sock.send('250 Working directory changed.\r\n')
+                                # tes = os.chdir(os.path.dirname(os.getcwd()))
+                                    sock.send(loc + '\n')
+
                                 else:
-                                    sock.send("504 directory not found.\r\n")
+                                    if os.path.isdir(dirname):
+                                        os.chdir(dirname)
+                                        sock.send('250 Working directory changed.\r\n')
+                                    else:
+                                        sock.send("504 directory not found.\r\n")
 
                         elif data == 'LIST':
-                            path = os.getcwd()
-                            response_data = ""
-                            isi = os.listdir(path)
-                            if isi:
-                                for file in isi:
-                                    response_data = response_data + file + "\n"
-                                sock.send(response_data)
+                            check = login.split(' ')
+                            if len(check) is not 1:
+                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
                             else:
-                                sock.send("550 no files in directory\n")
+                                path = os.getcwd()
+                                response_data = ""
+                                isi = os.listdir(path)
+                                if isi:
+                                    for file in isi:
+                                        response_data = response_data + file + "\n"
+                                    sock.send(response_data)
+                                else:
+                                    sock.send("550 no files in directory\n")
                         elif data == 'RNFR':
-                            prevname = login.split(" ")[1]
-                            loc = os.getcwd()
-                            loc = loc + "\\" + prevname
-                            #print loc
-                            if os.path.exists(loc):
-                                if os.path.isfile(loc):
-                                    prevname = prevname
-                                    sock.send("350 Ready.\r\n")
-                                    renameflag = 1
+                            check = login.split(' ')
+                            if len(check) is not 2:
+                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
+                            else:
+                                prevname = login.split(" ")[1]
+                                loc = os.getcwd()
+                                loc = loc + "\\" + prevname
+                                #print loc
+                                if os.path.exists(loc):
+                                    if os.path.isfile(loc):
+                                        prevname = prevname
+                                        sock.send("350 Ready.\r\n")
+                                        renameflag = 1
+                                    else:
+                                        prevname = ''
+                                        renameflag = 0
+                                        sock.send("553 the requested item is not a valid file.\r\n")
                                 else:
                                     prevname = ''
                                     renameflag = 0
-                                    sock.send("553 the requested item is not a valid file.\r\n")
-                            else:
-                                prevname = ''
-                                renameflag = 0
-                                sock.send("550 File not found.\r\n")
+                                    sock.send("550 File not found.\r\n")
                         elif data == 'RNTO':
-                            newname = login.split(" ")[1]
-                            if renameflag is not 0:
-                                os.rename(prevname, newname)
-                                prevname = ''
-                                newname = ''
-                                sock.send("250 File renamed.\r\n")
+                            check = login.split(' ')
+                            if len(check) is not 2:
+                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
                             else:
-                                sock.send("503 do a valid RNFR command first\r\n")
+                                newname = login.split(" ")[1]
+                                if renameflag is not 0:
+                                    os.rename(prevname, newname)
+                                    prevname = ''
+                                    newname = ''
+                                    sock.send("250 File renamed.\r\n")
+                                else:
+                                    sock.send("503 do a valid RNFR command first\r\n")
 
                         elif data=='MKD':
-                            dir=login.split(" ")[1]
-                            loc=os.getcwd()
-                            loc = loc + "\\" + dir
-                            if not os.path.isdir(loc):
-                                os.mkdir(loc)
-                                sock.send('257' +dir+ "directory created\r\n")
+                            check = login.split(' ')
+                            if len(check) is not 2:
+                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
                             else:
-                                sock.send("553 directory name is already been used\r\n")
+                                dir=login.split(" ")[1]
+                                loc=os.getcwd()
+                                loc = loc + "\\" + dir
+                                if not os.path.isdir(loc):
+                                    os.mkdir(loc)
+                                    sock.send('257' +dir+ "directory created\r\n")
+                                else:
+                                    sock.send("553 directory name is already been used\r\n")
 
                         elif data=='RMD':
-                            dir = login.split(" ")[1]
-                            loc = os.getcwd()
-                            loc = loc + "\\" + dir
-                            if os.path.isdir(loc):
-                                os.rmdir(loc)
-                                sock.send ("200 directory deleted\r\n")
+                            check = login.split(' ')
+                            if len(check) is not 2:
+                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
                             else:
-                                sock.send("550 directory is not exist\r\n")
+                                dir = login.split(" ")[1]
+                                loc = os.getcwd()
+                                loc = loc + "\\" + dir
+                                if os.path.isdir(loc):
+                                    os.rmdir(loc)
+                                    sock.send ("200 directory deleted\r\n")
+                                else:
+                                    sock.send("550 directory is not exist\r\n")
 
 
                         elif data == 'HELP':
-                            print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> 214 Have a nice day.'
-                            sock.send(
-                                '214 The following commands are recognized:\r\nUSER\tPASS\tCWD\r\nQUIT\tRETR\tSTOR'
-                                '\r\nRNTO\tDELE\tRMD\r\nMKD\t\tPWD\t\tLIST\r\nHELP\r\n')
+                            check = login.split(' ')
+                            if len(check) is not 1:
+                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
+                            else:
+                                print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> 214 Have a nice day.'
+                                sock.send(
+                                    '214 The following commands are recognized:\r\nUSER\tPASS\tCWD\r\nQUIT\tRETR\tSTOR'
+                                    '\r\nRNTO\tDELE\tRMD\r\nMKD\t\tPWD\t\tLIST\r\nHELP\r\n')
                         elif data == 'STOR':
-                            print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address,\
-                                '> 150 Opening data connection.'
-                            sock.send('150 Opening data connection.\r\n')
-                            data = sock.recv(1024)
-                            size = sock.recv(1024)
-                            size = int(size)
-                            with open(data, 'wb') as f:
-                                isi = ''
-                                while 1:
-                                    dapet = sock.recv(1024)
-                                    isi += dapet
-                                    #time.sleep(0.1)
-                                    if len(isi) >= size:
-                                        break
-                                f.write(isi)
-                            #time.sleep(1)
-                            sock.send("226 Transfer complete.\r\n")
-                            print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> 226 Transfer complete.'
-                        elif data == 'RETR':
-                            print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address,\
-                                '> 150 Opening data connection.'
-                            sock.send('150 Opening data connection.\r\n')
-                            filename = sock.recv(1024)
-                            filesize = os.path.getsize(filename)
-                            filesize = str(filesize)
-                            sock.send(filesize)
-                            filesize = int(filesize)
-                            with open(filename, 'rb') as f:
-                                data = ""
-                                while 1:
-                                    baca = f.read(1024)
-                                    data += baca
-                                    if len(data) >= filesize:
-                                        break
-                                sock.send(data)
+                            check = login.split(' ')
+                            if len(check) is not 2:
+                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
+                            else:
+                                print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address,\
+                                    '> 150 Opening data connection.'
+                                sock.send('150 Opening data connection.\r\n')
+                                data = sock.recv(1024)
+                                size = sock.recv(1024)
+                                size = int(size)
+                                with open(data, 'wb') as f:
+                                    isi = ''
+                                    while 1:
+                                        dapet = sock.recv(1024)
+                                        isi += dapet
+                                        #time.sleep(0.1)
+                                        if len(isi) >= size:
+                                            break
+                                    f.write(isi)
+                                #time.sleep(1)
                                 sock.send("226 Transfer complete.\r\n")
-                            #time.sleep(1)
-                            print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> Download Finished.'
-
-
-
+                                print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> 226 Transfer complete.'
+                        elif data == 'RETR':
+                            check = login.split(' ')
+                            if len(check) is not 2:
+                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
+                            else:
+                                print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address,\
+                                    '> 150 Opening data connection.'
+                                sock.send('150 Opening data connection.\r\n')
+                                filename = sock.recv(1024)
+                                filesize = os.path.getsize(filename)
+                                filesize = str(filesize)
+                                sock.send(filesize)
+                                filesize = int(filesize)
+                                with open(filename, 'rb') as f:
+                                    data = ""
+                                    while 1:
+                                        baca = f.read(1024)
+                                        data += baca
+                                        if len(data) >= filesize:
+                                            break
+                                    sock.send(data)
+                                    sock.send("226 Transfer complete.\r\n")
+                                #time.sleep(1)
+                                print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> Download Finished.'
 
 
                         elif data == 'DELE':
-                            sock.send('Deleting Files...\r\n')
-                            filename = sock.recv(1024)
-                            allow_delete = True
-                            if allow_delete:
-                                os.remove(filename)
-                                print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address,\
-                                    '> 250 File deleted successfully.'
-                                sock.send('250 File deleted successfully\r\n')
-                                allow_delete = False
+                            check = login.split(' ')
+                            if len(check) is not 2:
+                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
                             else:
-                                print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address,\
-                                    '> 450 Not Allowed.'
-                                self.send('450 Not Allowed.\r\n')
+                                sock.send('Deleting Files...\r\n')
+                                filename = sock.recv(1024)
+                                allow_delete = True
+                                if allow_delete:
+                                    os.remove(filename)
+                                    print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address,\
+                                        '> 250 File deleted successfully.'
+                                    sock.send('250 File deleted successfully\r\n')
+                                    allow_delete = False
+                                else:
+                                    print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address,\
+                                        '> 450 Not Allowed.'
+                                    self.send('450 Not Allowed.\r\n')
 
 except KeyboardInterrupt:
     server_socket.close()
