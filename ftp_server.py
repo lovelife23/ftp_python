@@ -168,7 +168,7 @@ try:
                         elif data == 'RNTO':
                             check = login.split(' ')
                             if len(check) is not 2:
-                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
+                                sock.send("500 Syntax error, command unrecognized.\r\n")
                             else:
                                 newname = login.split(" ")[1]
                                 if renameflag is not 0:
@@ -182,7 +182,7 @@ try:
                         elif data=='MKD':
                             check = login.split(' ')
                             if len(check) is not 2:
-                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
+                                sock.send("500 Syntax error, command unrecognized.\r\n")
                             else:
                                 dir=login.split(" ")[1]
                                 loc=os.getcwd()
@@ -196,7 +196,7 @@ try:
                         elif data=='RMD':
                             check = login.split(' ')
                             if len(check) is not 2:
-                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
+                                sock.send("500 Syntax error, command unrecognized.\r\n")
                             else:
                                 dir = login.split(" ")[1]
                                 loc = os.getcwd()
@@ -211,7 +211,7 @@ try:
                         elif data == 'HELP':
                             check = login.split(' ')
                             if len(check) is not 1:
-                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
+                                sock.send("500 Syntax error, command unrecognized.\r\n")
                             else:
                                 print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> 214 Have a nice day.'
                                 sock.send(
@@ -219,8 +219,9 @@ try:
                                     '\r\nRNTO\tDELE\tRMD\r\nMKD\t\tPWD\t\tLIST\r\nHELP\r\n')
                         elif data == 'STOR':
                             check = login.split(' ')
-                            if len(check) is not 2:
-                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
+                            print len(check)
+                            if len(check) < 2:
+                                sock.send("500 Syntax error, command unrecognized.\r\n")
                             else:
                                 print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address,\
                                     '> 150 Opening data connection.'
@@ -242,8 +243,8 @@ try:
                                 print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> 226 Transfer complete.'
                         elif data == 'RETR':
                             check = login.split(' ')
-                            if len(check) is not 2:
-                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
+                            if len(check) < 2:
+                                sock.send("500 Syntax error, command unrecognized.\r\n")
                             else:
                                 print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address,\
                                     '> 150 Opening data connection.'
@@ -261,15 +262,14 @@ try:
                                         if len(data) >= filesize:
                                             break
                                     sock.send(data)
-                                    sock.send("226 Transfer complete.\r\n")
                                 #time.sleep(1)
                                 print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> Download Finished.'
-
+                                sock.send("226 Transfer complete.\r\n")
 
                         elif data == 'DELE':
                             check = login.split(' ')
                             if len(check) is not 2:
-                                sock.send(" 500 Syntax error, command unrecognized.\r\n")
+                                sock.send("500 Syntax error, command unrecognized.\r\n")
                             else:
                                 sock.send('Deleting Files...\r\n')
                                 filename = sock.recv(1024)
