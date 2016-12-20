@@ -264,7 +264,7 @@ try:
                                     sock.send(data)
                                 #time.sleep(1)
                                 print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> Download Finished.'
-                                sock.send("226 Transfer complete.")
+                                sock.send("226 Transfer complete.\r\n")
 
                         elif data == 'DELE':
                             check = login.split(' ')
