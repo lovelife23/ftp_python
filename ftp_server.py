@@ -189,7 +189,7 @@ try:
                                 loc = loc + "\\" + dir
                                 if not os.path.isdir(loc):
                                     os.mkdir(loc)
-                                    sock.send('257' +dir+ "directory created\r\n")
+                                    sock.send('257 ' +dir+ " directory created\r\n")
                                 else:
                                     sock.send("553 directory name is already been used\r\n")
 
@@ -264,7 +264,7 @@ try:
                                     sock.send(data)
                                 #time.sleep(1)
                                 print time.strftime('%Y/%m/%d %H:%M:%S'), UN, client_address, '> Download Finished.'
-                                sock.send("226 Transfer complete.\r\n")
+                                sock.send("226 Transfer complete.")
 
                         elif data == 'DELE':
                             check = login.split(' ')
